@@ -1,13 +1,15 @@
+cmake_minimum_required(VERSION 2.8.9)
+include(GNUInstallDirs)
+project (mytimer)
 
-INCLUDE_DIR = -I.
+add_library(mytimer STATIC mytimer.c)
+TARGET_LINK_LIBRARIES(mytimer rt)
 
-SOURCES = test.c \
-          mytimer.c
+set_target_properties(mytimer PROPERTIES
+  PUBLIC_HEADER mytimer.h)
 
-OBJECTS := $(notdir $(SOURCES:.c=.o))
+SET(prefix ${CMAKE_INSTALL_PREFIX})
 
-all : $(OBJECTS)
-	$(CC) $(OBJECTS) -o test -lpthread
-
-%.o : %.c
-	$(CC) -g $(CFLAGS) $(INCLUDE_DIR) -o $@ -c $<
+install(TARGETS mytimer
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
